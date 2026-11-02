@@ -6,7 +6,7 @@ This is a static PWA. It does not need a server-side database or build step. Inv
 
 1. Extract this ZIP on a computer.
 2. Create a **private** GitHub repository.
-3. Upload the *contents* of this folder into the repository root. Keep `index.html`, `manifest.webmanifest`, `sw.js`, and `vercel.json` at the root, along with the `icons/` and `assets/` folders.
+3. Upload the *contents* of this folder into the repository root. Keep `index.html`, `original-generator.html`, `manifest.webmanifest`, `sw.js`, and `vercel.json` at the root, along with the `icons/` and `assets/` folders.
 4. Commit the files to the repository's production branch, usually `main`.
 
 ## 2. Connect it to Vercel

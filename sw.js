@@ -1,7 +1,8 @@
-const CACHE_NAME = 'shelrick-invoice-pwa-v3';
+const CACHE_NAME = 'shelrick-invoice-pwa-v4';
 const APP_SHELL = [
   './',
   './index.html',
+  './original-generator.html',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',

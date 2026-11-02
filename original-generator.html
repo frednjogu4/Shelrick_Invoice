@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shelrick Technology - Original Invoice Generator (Reference Copy)</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --bg-page: #f1f5f9;
+            --bg-card: #ffffff;
+            --border: #cbd5e1;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        /* App Toolbar (Hidden on Print) */
+        .app-toolbar {
+            max-width: 950px;
+            margin: 0 auto 20px auto;
+            background: #1e293b;
+            color: white;
+            padding: 15px 24px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .app-title {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-title span {
+            background: #3b82f6;
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            text-transform: uppercase;
+        }
+
+        .toolbar-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: #334155;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        /* Main Invoice Container */
+        .invoice-box {
+            max-width: 950px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 45px 50px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        /* Invoice Header */
+        .header-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+        }
+
+        .company-info h1 {
+            font-size: 26px;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .company-tagline {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .company-details p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .invoice-meta {
+            text-align: right;
+        }
+
+        .invoice-meta h2 {
+            font-size: 32px;
+            color: var(--accent);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+        }
+
+        .meta-row label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .meta-row input, .meta-row select {
+            padding: 5px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 13px;
+            text-align: right;
+            width: 150px;
+        }
+
+        /* Billing Section */
+        .bill-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 35px;
+        }
+
+        .bill-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .bill-card h3 {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 60px;
+        }
+
+        /* Quick Item Selector Toolbar */
+        .item-quick-bar {
+            background: #eff6ff;
+            border: 1px dashed #60a5fa;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .item-quick-bar span {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e40af;
+        }
+
+        .item-quick-bar select {
+            flex-grow: 1;
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid #93c5fd;
+            font-size: 13px;
+        }
+
+        /* Items Table */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+
+        .items-table th {
+            background: var(--primary);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .items-table th.text-right {
+            text-align: right;
+        }
+
+        .items-table th.text-center {
+            text-align: center;
+        }
+
+        .items-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        .items-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .items-table input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .items-table input.num-input {
+            text-align: right;
+        }
+
+        .del-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 4px 8px;
+        }
+
+        .del-btn:hover {
+            background: #fee2e2;
+            border-radius: 4px;
+        }
+
+        /* Totals & Payment Section Grid */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .payment-info {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--accent);
+            border-radius: 6px;
+            padding: 18px;
+        }
+
+        .payment-info h4 {
+            font-size: 14px;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .payment-info select {
+            font-size: 12px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .payment-box {
+            font-size: 13px;
+            color: var(--text-main);
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        .payment-box strong {
+            color: var(--primary);
+        }
+
+        .totals-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .totals-table td {
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .totals-table td:first-child {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .totals-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .totals-table tr.grand-total {
+            border-top: 2px solid var(--primary);
+            border-bottom: 2px double var(--primary);
+        }
+
+        .totals-table tr.grand-total td {
+            padding: 12px 0;
+            font-size: 18px;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .totals-table tr.balance-due td {
+            font-size: 16px;
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        /* Footer Notes */
+        .invoice-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .invoice-footer strong {
+            color: var(--primary);
+            display: block;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        /* Modal Styles for Saved Invoices */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .history-list {
+            list-style: none;
+        }
+
+        .history-item {
+            padding: 10px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Print Specific Styling */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .app-toolbar, .item-quick-bar, .del-btn, .add-row-container, .print-hide {
+                display: none !important;
+            }
+
+            .invoice-box {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            input, select, textarea {
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                color: #0f172a !important;
+                font-weight: 500;
+                appearance: none;
+            }
+
+            .meta-row input, .meta-row select {
+                width: auto;
+            }
+
+            .bill-card {
+                border: none;
+                padding: 0;
+                background: transparent;
+            }
+
+            .bill-card h3 {
+                border-bottom: 1px solid #0f172a;
+            }
+
+            .items-table input {
+                font-size: 13px;
+            }
+
+            .payment-info {
+                background: #f8fafc !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-hide" style="max-width:1100px;margin:0 auto 12px;padding:10px 14px;border:1px solid #dbeafe;border-radius:8px;background:#eff6ff;color:#1e3a8a;font-size:12px;">Reference copy of the supplied single-file generator. Client presets have been removed for privacy. This standalone file does not share invoice numbering or saved history with the main PWA; use the PWA for current invoices.</div>
+
+    <!-- App Toolbar -->
+    <div class="app-toolbar print-hide">
+        <div class="app-title">
+            SHELRICK TECH <span>Daily Invoice Tool</span>
+        </div>
+        <div class="toolbar-actions">
+            <button class="btn btn-secondary" onclick="openHistoryModal()">📜 Saved History</button>
+            <button class="btn btn-success" onclick="saveToHistory()">💾 Save Invoice</button>
+            <button class="btn btn-danger" onclick="clearInvoice()">✨ New / Reset</button>
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Print / Download PDF</button>
+        </div>
+    </div>
+
+    <!-- Main Invoice Area -->
+    <div class="invoice-box">
+        <!-- Header -->
+        <div class="header-grid">
+            <div class="company-info">
+                <h1>SHELRICK TECHNOLOGY</h1>
+                <div class="company-tagline">IT Solutions & Cloud Services</div>
+                <div class="company-details">
+                    <p>P.O. BOX 70153 - 00400, Nairobi, Kenya</p>
+                    <p>Phone: +254 721 752 212</p>
+                    <p>Email: shelricktech@gmail.com</p>
+                </div>
+            </div>
+
+            <div class="invoice-meta">
+                <h2>INVOICE</h2>
+                <div class="meta-row">
+                    <label>Invoice No:</label>
+                    <input type="text" id="inv-no" value="A046">
+                </div>
+                <div class="meta-row">
+                    <label>Issue Date:</label>
+                    <input type="date" id="inv-date">
+                </div>
+                <div class="meta-row">
+                    <label>Due Date:</label>
+                    <input type="text" id="inv-due" value="Due upon receipt">
+                </div>
+                <div class="meta-row">
+                    <label>Account #:</label>
+                    <input type="text" id="inv-acc" value="0120190123">
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Billing Info -->
+        <div class="bill-grid">
+            <div class="bill-card">
+                <h3>Bill To (Client)</h3>
+                <div class="form-group">
+                    <input type="text" id="client-name" placeholder="Client Name / Contact Person" style="font-weight: bold; font-size: 14px;">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="client-company" placeholder="Company Name">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="client-address" placeholder="P.O. Box / Street Address">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="client-location" placeholder="City, Country" value="Nairobi, Kenya">
+                </div>
+            </div>
+
+            <div class="bill-card">
+                <h3>Delivery & Project Details</h3>
+                <div class="form-group">
+                    <label class="print-hide">Delivery / Ref No:</label>
+                    <input type="text" id="delivery-no" placeholder="Delivery No / Reference">
+                </div>
+                <div class="form-group">
+                    <label class="print-hide">Project Notes / Terms:</label>
+                    <textarea id="project-notes" placeholder="Domain Setup, Configuration, Web Hosting Period..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Item Selector Bar -->
+        <div class="item-quick-bar print-hide">
+            <span>⚡ Quick Add Standard Service:</span>
+            <select id="quick-service-select">
+                <option value="">-- Choose a Service to Insert --</option>
+                <option value="Domain Setup and Configuration|3000">Domain Setup and Configuration - KES 3,000</option>
+                <option value="Domain Registration (.co.ke - 1 Year)|3349">Domain Registration (.co.ke - 1 Year) - KES 3,349</option>
+                <option value="Domain Registration (.com - 1 Year)|3000">Domain Registration (.com - 1 Year) - KES 3,000</option>
+                <option value="Email Configuration and Setup|2000">Email Configuration and Setup - KES 2,000</option>
+                <option value="Mail Configuration and Support (3 Mailboxes)|6000">Mail Configuration and Support - KES 6,000</option>
+                <option value="cPanel Web Starter Hosting (Annual)|13860">cPanel Web Starter Hosting - KES 13,860</option>
+                <option value="cPanel Basic Hosting Package|4620">cPanel Basic Hosting Package - KES 4,620</option>
+                <option value="Website Migration & File Transfer|3000">Website Migration & File Transfer - KES 3,000</option>
+            </select>
+            <button class="btn btn-primary" onclick="insertQuickService()">Add Item +</button>
+        </div>
+
+        <!-- Line Items Table -->
+        <table class="items-table" id="items-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;" class="text-center">#</th>
+                    <th>Description</th>
+                    <th style="width: 80px;" class="text-center">Qty</th>
+                    <th style="width: 140px;" class="text-right">Unit Price (KES)</th>
+                    <th style="width: 140px;" class="text-right">Total (KES)</th>
+                    <th style="width: 40px;" class="print-hide"></th>
+                </tr>
+            </thead>
+            <tbody id="items-body">
+                <!-- Rows injected via JS -->
+            </tbody>
+        </table>
+
+        <div class="add-row-container print-hide" style="margin-bottom: 30px;">
+            <button class="btn btn-secondary" onclick="addItemRow('', 1, 0)">+ Add Blank Line Item</button>
+        </div>
+
+        <!-- Bottom Grid: Payment Details & Calculation Totals -->
+        <div class="bottom-grid">
+            <!-- Payment Instructions Block -->
+            <div class="payment-info">
+                <h4>
+                    PAYMENT INSTRUCTIONS
+                    <select class="print-hide" id="pay-select" onchange="updatePaymentInfo(this.value)">
+                        <option value="both">Both M-PESA & Equity Paybills</option>
+                        <option value="mpesa">M-PESA Paybill 542542 Only</option>
+                        <option value="equity">Equity Bank Paybill 247247 Only</option>
+                    </select>
+                </h4>
+                <div id="payment-content" class="payment-box">
+                    <!-- Dynamic payment block -->
+                </div>
+            </div>
+
+            <!-- Financial Totals -->
+            <div>
+                <table class="totals-table">
+                    <tr>
+                        <td>Subtotal:</td>
+                        <td id="lbl-subtotal">KES 0.00</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            VAT (16%): 
+                            <input type="checkbox" id="tax-toggle" class="print-hide" onchange="calculateTotals()">
+                        </td>
+                        <td id="lbl-tax">KES 0.00</td>
+                    </tr>
+                    <tr class="grand-total">
+                        <td>TOTAL:</td>
+                        <td id="lbl-total">KES 0.00</td>
+                    </tr>
+                    <tr>
+                        <td>Amount Paid:</td>
+                        <td>
+                            <input type="number" id="input-paid" value="0" style="width: 100px; text-align: right; border: 1px solid var(--border); border-radius: 4px; padding: 2px 5px;" oninput="calculateTotals()">
+                        </td>
+                    </tr>
+                    <tr class="balance-due">
+                        <td>BALANCE DUE:</td>
+                        <td id="lbl-balance">KES 0.00</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer Sign Off -->
+        <div class="invoice-footer">
+            <strong>THANK YOU FOR YOUR BUSINESS!</strong>
+            Shelrick Technology &bull; P.O. Box 70153 - 00400 Nairobi &bull; Tel: +254 721 752 212
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal" id="history-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📜 Saved Invoices History</h3>
+                <button class="btn btn-danger" onclick="closeHistoryModal()">X</button>
+            </div>
+            <ul class="history-list" id="history-list"></ul>
+            <div style="margin-top: 15px; text-align: right;">
+                <button class="btn btn-secondary" onclick="localStorage.removeItem('shelrick_invoices'); renderHistory();">Clear All History</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Default Date
+        document.getElementById('inv-date').valueAsDate = new Date();
+
+        // Initial sample items
+        let itemIndex = 0;
+        addItemRow("Domain Setup and Configuration", 1, 3000);
+        addItemRow("cPanel Web Starter Hosting Package", 1, 4620);
+        addItemRow("Email Configuration and Support", 2, 2000);
+
+        updatePaymentInfo('both');
+
+        function addItemRow(desc = "", qty = 1, price = 0) {
+            itemIndex++;
+            const tbody = document.getElementById('items-body');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="text-center row-num">${tbody.children.length + 1}</td>
+                <td><input type="text" class="item-desc" value="${desc}" placeholder="Item description"></td>
+                <td><input type="number" class="item-qty num-input" value="${qty}" min="0" oninput="calculateTotals()"></td>
+                <td><input type="number" class="item-price num-input" value="${price}" min="0" step="any" oninput="calculateTotals()"></td>
+                <td class="text-right font-bold item-total">KES 0.00</td>
+                <td class="print-hide text-center">
+                    <button class="del-btn" onclick="removeRow(this)" title="Delete Item">&times;</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            renumberRows();
+            calculateTotals();
+        }
+
+        function removeRow(btn) {
+            const row = btn.closest('tr');
+            row.remove();
+            renumberRows();
+            calculateTotals();
+        }
+
+        function renumberRows() {
+            const rows = document.querySelectorAll('#items-body tr');
+            rows.forEach((r, idx) => {
+                r.querySelector('.row-num').innerText = idx + 1;
+            });
+        }
+
+        function insertQuickService() {
+            const select = document.getElementById('quick-service-select');
+            const val = select.value;
+            if (!val) return;
+            const parts = val.split('|');
+            addItemRow(parts[0], 1, parseFloat(parts[1]));
+            select.value = "";
+        }
+
+        function formatMoney(num) {
+            return "KES " + num.toLocaleString('en-KE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function calculateTotals() {
+            const rows = document.querySelectorAll('#items-body tr');
+            let subtotal = 0;
+
+            rows.forEach(r => {
+                const qty = parseFloat(r.querySelector('.item-qty').value) || 0;
+                const price = parseFloat(r.querySelector('.item-price').value) || 0;
+                const total = qty * price;
+                subtotal += total;
+                r.querySelector('.item-total').innerText = formatMoney(total);
+            });
+
+            const taxToggle = document.getElementById('tax-toggle').checked;
+            const tax = taxToggle ? subtotal * 0.16 : 0;
+            const grandTotal = subtotal + tax;
+            const paid = parseFloat(document.getElementById('input-paid').value) || 0;
+            const balance = grandTotal - paid;
+
+            document.getElementById('lbl-subtotal').innerText = formatMoney(subtotal);
+            document.getElementById('lbl-tax').innerText = formatMoney(tax);
+            document.getElementById('lbl-total').innerText = formatMoney(grandTotal);
+            document.getElementById('lbl-balance').innerText = formatMoney(balance);
+        }
+
+        function updatePaymentInfo(type) {
+            const container = document.getElementById('payment-content');
+            if (type === 'mpesa') {
+                container.innerHTML = `
+                    <p>Make all checks / M-PESA payments payable to <strong>Shelrick Technology</strong></p>
+                    <p><strong>M-PESA Paybill:</strong> 542542</p>
+                    <p><strong>Account Number:</strong> 01904998536150</p>
+                `;
+            } else if (type === 'equity') {
+                container.innerHTML = `
+                    <p>Make Payment Via M-PESA to Equity Bank:</p>
+                    <p><strong>Paybill:</strong> 247247 &bull; <strong>Account:</strong> 0721752212</p>
+                    <p><strong>Account Name:</strong> FREDRICK K NJOGU</p>
+                `;
+            } else {
+                container.innerHTML = `
+                    <p><strong>Option 1 (M-PESA):</strong> Paybill <strong>542542</strong> | Acc: <strong>01904998536150</strong> (Shelrick Technology)</p>
+                    <p style="margin-top: 6px;"><strong>Option 2 (Equity Bank):</strong> Paybill <strong>247247</strong> | Acc: <strong>0721752212</strong> (Fredrick K Njogu)</p>
+                `;
+            }
+        }
+
+        function clearInvoice() {
+            if (!confirm("Are you sure you want to reset the form for a new invoice?")) return;
+            document.getElementById('client-name').value = "";
+            document.getElementById('client-company').value = "";
+            document.getElementById('client-address').value = "";
+            document.getElementById('delivery-no').value = "";
+            document.getElementById('project-notes').value = "";
+            document.getElementById('items-body').innerHTML = "";
+            
+            // Increment Invoice number automatically
+            let currInv = document.getElementById('inv-no').value;
+            let numPart = parseInt(currInv.replace(/\D/g, ''));
+            if (!isNaN(numPart)) {
+                document.getElementById('inv-no').value = "A0" + (numPart + 1);
+            }
+            
+            addItemRow("", 1, 0);
+        }
+
+        function saveToHistory() {
+            const invNo = document.getElementById('inv-no').value;
+            const client = document.getElementById('client-company').value || document.getElementById('client-name').value || "Unnamed Client";
+            const date = document.getElementById('inv-date').value;
+            const total = document.getElementById('lbl-total').innerText;
+
+            let history = JSON.parse(localStorage.getItem('shelrick_invoices') || "[]");
+            history.unshift({ invNo, client, date, total });
+            localStorage.setItem('shelrick_invoices', JSON.stringify(history));
+            alert("Invoice saved to local history!");
+        }
+
+        function openHistoryModal() {
+            renderHistory();
+            document.getElementById('history-modal').style.display = 'flex';
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('history-modal').style.display = 'none';
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            let history = JSON.parse(localStorage.getItem('shelrick_invoices') || "[]");
+            if (history.length === 0) {
+                list.innerHTML = "<p style='color: #64748b; text-align: center; padding: 20px;'>No saved invoices yet.</p>";
+                return;
+            }
+            list.innerHTML = history.map(h => `
+                <li class="history-item">
+                    <div>
+                        <strong>#${h.invNo}</strong> - ${h.client}<br>
+                        <small style="color: #64748b;">Date: ${h.date}</small>
+                    </div>
+                    <div>
+                        <strong style="color: #2563eb;">${h.total}</strong>
+                    </div>
+                </li>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

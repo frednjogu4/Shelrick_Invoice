@@ -9,6 +9,11 @@ A lightweight, offline-capable Progressive Web App (PWA) for creating Shelrick T
 - Editable invoice fields, line items, payment instructions, VAT and amount-paid tracking.
 - Direct one-page PDF download, browser print layout, saved invoice history and email/WhatsApp sharing tools.
 - PWA manifest, service worker and app icons for mobile installation and offline use.
+- Downloadable, privacy-sanitized copy of the supplied single-file invoice generator (`original-generator.html`); the original client presets are excluded.
+
+## Original generator download
+
+Use the **Download original generator** link in the app note to save a privacy-sanitized copy of the supplied single-file HTML generator. Its embedded client presets were removed before public hosting. The standalone copy has separate local storage and invoice numbering; use the PWA for current invoice records and sequence. The uploaded original remains unchanged in the private workspace.
 
 ## Automatic invoice numbers
 
