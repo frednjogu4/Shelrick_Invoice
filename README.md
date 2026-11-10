@@ -4,7 +4,9 @@ A lightweight, offline-capable Progressive Web App (PWA) for creating Shelrick T
 
 ## What's included
 
-- Editable business profile, contact details, logo, automatic invoice-number sequence, currency, VAT, payment details and footer text.
+- Editable business profile, contact details, logo, continuous automatic invoice numbering, currency, VAT, multiple payment methods and footer text.
+- Local payment-method manager and editable service catalog for quick-add pricing.
+- Selectable A4 (default), A5 and 80 mm thermal receipt PDF/print output.
 - Client book: add, edit, search, load and delete client records.
 - Editable invoice fields, line items, payment instructions, VAT and amount-paid tracking.
 - Direct one-page PDF download, browser print layout, saved invoice history and email/WhatsApp sharing tools.
@@ -17,7 +19,7 @@ Use the **Download original generator** link in the app note to save a privacy-s
 
 ## Automatic invoice numbers
 
-The supplied **A046** invoice template is added to the device's history as a reference-only record (without client details). A fresh installation starts a new blank invoice at **A047**. Use **New** for each subsequent invoice; it advances the configured prefix/sequence and skips numbers already in this device's saved history. The number field is read-only to prevent accidental duplicates; change the prefix or next sequence in **Settings** if needed.
+The supplied **A046** invoice template is added to the device's history as a reference-only record (without client details). A fresh installation starts a new blank invoice at **A047**. Use **New** for each subsequent invoice; it advances the configured prefix/sequence and skips numbers already in this device's saved history. The number field is read-only to prevent accidental duplicates; change the prefix or next sequence in **Settings** if needed. Numbering is continuous and does not reset by month or year.
 
 ## Install on a phone
 
@@ -35,6 +37,8 @@ Settings, clients and invoice history are saved locally in that browser/app inst
 
 The business WhatsApp contact is preset to **+254 721 752 212** and can be changed in Settings. The recipient/client phone is entered in the Bill To details. **Share PDF** uses the phone's share sheet so you can select WhatsApp and the client. If the browser does not support sharing a file, the app downloads the PDF and opens a WhatsApp chat with a prepared message; attach the downloaded PDF before sending. Email opens a prepared draft addressed to the client and downloads the PDF; attach it before pressing Send. The email signature uses **shelricktech@gmail.com**, but the actual From address is controlled by the mail account selected on the phone—choose that Gmail account in your mail app. Browsers do not allow a website to silently send a message, force a From account, or attach a local file to a `mailto:` draft.
 
-## One-page output
+## Page sizes and output
 
-The PDF export always creates a single A4 page and scales the complete invoice to fit. Browser printing uses a compact A4 layout and reduces the invoice to fit one page. Very long invoices can become small when many rows or lengthy notes are entered.
+Choose the output size in **Settings → PDF / print page size**. **A4** is the default; **A5** fits the invoice to a smaller sheet; **80 mm** creates a narrow thermal-receipt layout with a content-sized PDF page. A4 and A5 PDFs remain single-page and scale the invoice to fit. Receipt print height is estimated from the invoice content; the final roll-paper length and cut behavior depend on the browser and thermal-printer driver. Long invoices on A4/A5 may be scaled down to keep the complete invoice on one page.
+
+Payment instructions and services/prices are editable in Settings and are stored locally on the current device. Use **Manage catalog** beside Quick add service, or open **Settings** to add, edit or remove entries.
